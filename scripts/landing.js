@@ -1,5 +1,6 @@
-var animatePoints = function() {
-    var points = document.getElementsByClassName('point');
+var pointsArray = document.getElementsByClassName('point');
+
+var animatePoints = function(points) {
     
     var revealPoints = function(node) {
         for ( i = 0; i < node.length; i++) {
@@ -34,4 +35,16 @@ var animatePoints = function() {
         revealPoints(points);
     };
 
+/*addEventListener takes 3 arguments, but here we use just two (third is useCapture and is optional)*/
+/* addEventListener(type, listener/function, useCapture/boolean)*/
+window.onload = function() {
+    var sellingPoints = document.getElementsByClassName('selling-points')[0];
+    var scrollDistance = sellingPoints.getBoundingClientRect().top - window.innerHeight + 200;
+    
+    window.addEventListener('scroll', function(event) {
+        if (document.documentElement.scrollTop || document.body.scrollTop >= scrollDistance) {
+            animatePoints(pointsArray)
+        }    
+    });
+}
 

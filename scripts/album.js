@@ -49,7 +49,7 @@ var allAlbums = [albumPicasso, albumMarconi, albumForeigner];
 var createSongRow = function(songNumber, songName, songLength) {
     var template = 
         '<tr class="album-view-song-item">'
-        + ' <td class="song-item-number" data-song-number="' + songNumber + '">' + songNumber + '</td>'
+        + ' <td class="song-item-number" id="song-item-'+songNumber+'" data-song-number="' + songNumber + '">' + songNumber + '</td>'
         + ' <td class="song-item-title">' + songName + '</td>'
         + ' <td class="song-item-duration">' + songLength + '</td>'
         + '</tr>'
@@ -58,7 +58,6 @@ var createSongRow = function(songNumber, songName, songLength) {
     return template;
     
 };
-
 
 
 var albumTitle = document.getElementsByClassName('album-view-title')[0];
@@ -82,24 +81,19 @@ var setCurrentAlbum = function (album) {
      }
 };
 
-//wanted to create an outside function here to pass
-//into eventlistener;
+var findParentByClassName = function(name) {
+    
+};
 
-//var changeAlbum = function() {
-//
-//    var allAlbums = [albumPicasso, albumMarconi, albumForeigner];
-//    count = 0;
-//    setCurrentAlbum(allAlbums[count]);
-//    count++;
-//    console.log(count);
-//    
-//}; 
 
 //Elements with listeners
 var songListContainer = document.getElementsByClassName("album-view-song-list")[0];
 var songRows = document.getElementsByClassName('album-view-song-item');
-
 var playButtonTemplate = '<a class="album-song-button"><span class="ion-play"></span></a>';
+var pauseButtonTemplate = '<a class="album-song-button"><span class="ion-pause"></span></a>';
+
+// Store state of playing songs
+var currentlyPlayingSong = null;
 
 window.onload = function() {
 //    onload, sets the current album viewing album.html.  allAlbums array created globally above.
@@ -118,17 +112,84 @@ window.onload = function() {
         }
     });
     
-    songListContainer.addEventListener('mouseover', function(event) {
-        //see createSongRow template above
-       if (event.target.parentElement.className === 'album-view-song-item') {
-        //selects only the song item numbers innerHTML and displays the button
-        event.target.parentElement.querySelector('.song-item-number').innerHTML = playButtonTemplate;
-       } 
-    });
     
-    for (var i = 0; i < songRows.length; i++) {
-        songRows[i].addEventListener('mouseleave', function(event) {
-           this.children[0].innerHTML = this.children[0].getAttribute('data-song-number');
-        });
+    
+   clickHandler = function(event) {
+    var songItem = this.querySelector('td.song-item-number');
+    var songNum = songItem.getAttribute('data-song-number');
+
+    if (currentlyPlayingSong === null) {
+      songItem.innerHTML = pauseButtonTemplate;
+      currentlyPlayingSong = songNum;
+    } else if (currentlyPlayingSong === songNum) {
+      songItem.innerHTML = playButtonTemplate;
+      currentlyPlayingSong = null;
+
+    } else if (currentlyPlayingSong !== songNum) {
+      var currentlyPlayingSongElement = document.querySelector('[data-song-number="' + currentlyPlayingSong + '"]');
+      currentlyPlayingSongElement.innerHTML = currentlyPlayingSongElement.getAttribute('data-song-number');
+      songItem.innerHTML = pauseButtonTemplate;
+      currentlyPlayingSong = songNum;
     }
+  };
+    
+    
+    for (i = 0; i < songRows.length; i++) {
+        songRows[i].addEventListener('mouseover', function(event) {
+            var songItem = this.querySelector('td.song-item-number');
+            var songNum = songItem.getAttribute('data-song-number');
+
+            if (songNum !== currentlyPlayingSong) {
+                songItem.innerHTML = playButtonTemplate;
+            }
+        });
+        songRows[i].addEventListener('mouseleave', function(event) {
+          var songItem = this.querySelector('.song-item-number');
+          var songItemNumber = songItem.getAttribute('data-song-number');
+
+            if (songItemNumber !== currentlyPlayingSong) {
+                songItem.innerHTML = songItemNumber;
+            }
+        });
+        songRows[i].addEventListener('click', clickHandler);
+    }
+    
+//    songListContainer.addEventListener('mouseover', function(event) {
+//        //see createSongRow template above
+//       if (event.target.parentElement.className === 'album-view-song-item') {
+//        //selects only the song item numbers innerHTML and displays the button
+//        var numberCell = event.target.parentElement.querySelector('.song-item-number');
+//        numberCell.innerHTML = playButtonTemplate;
+//        numberCell.getElementsByClassName('ion-play')[0].setAttribute('data-song-number', event.srcElement.getAttribute('data-song-number'));
+//       } 
+//    });
+//    
+//    for (var i = 0; i < songRows.length; i++) {
+//        
+//        songRows[i].addEventListener('mouseleave', function(event) {
+//           this.children[0].innerHTML = this.children[0].getAttribute('data-song-number');
+//        });
+//        
+//        songRows[i].addEventListener('click', function(event) {
+//         // Event handler call
+//            var songItem = this.querySelector('.song-item-number');           
+//            var songNum = songItem.getAttribute('data-song-number');
+//            
+////            songPlayer.playSong(songNum);
+//            
+//            if (currentlyPlayingSong === null) {
+//                songItem.innerHTML = pauseButtonTemplate;
+//                currentlyPlayingSong = songItem.getAttribute('data-song-number');
+//            } else if (currentlyPlayingSong === songItem.getAttribute('data-song-number')) {
+//                songItem.innerHTML = playButtonTemplate;
+//                currentlyPlayingSong = null;
+//     
+//            } else if (currentlyPlayingSong !== songItem.getAttribute('data-song-number')) {
+//                var currentlyPlayingSongElement = document.querySelector('[data-song-number="' + currentlyPlayingSong + '"]');
+//                currentlyPlayingSongElement.innerHTML = currentlyPlayingSongElement.getAttribute('data-song-number');
+//                songItem.innerHTML = pauseButtonTemplate;
+//                currentlyPlayingSong = songItem.getAttribute('data-song-number');
+//            }
+//        });
+//    }
 };

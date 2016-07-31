@@ -153,43 +153,4 @@ window.onload = function() {
         });
         songRows[i].addEventListener('click', clickHandler);
     }
-    
-//    songListContainer.addEventListener('mouseover', function(event) {
-//        //see createSongRow template above
-//       if (event.target.parentElement.className === 'album-view-song-item') {
-//        //selects only the song item numbers innerHTML and displays the button
-//        var numberCell = event.target.parentElement.querySelector('.song-item-number');
-//        numberCell.innerHTML = playButtonTemplate;
-//        numberCell.getElementsByClassName('ion-play')[0].setAttribute('data-song-number', event.srcElement.getAttribute('data-song-number'));
-//       } 
-//    });
-//    
-//    for (var i = 0; i < songRows.length; i++) {
-//        
-//        songRows[i].addEventListener('mouseleave', function(event) {
-//           this.children[0].innerHTML = this.children[0].getAttribute('data-song-number');
-//        });
-//        
-//        songRows[i].addEventListener('click', function(event) {
-//         // Event handler call
-//            var songItem = this.querySelector('.song-item-number');           
-//            var songNum = songItem.getAttribute('data-song-number');
-//            
-////            songPlayer.playSong(songNum);
-//            
-//            if (currentlyPlayingSong === null) {
-//                songItem.innerHTML = pauseButtonTemplate;
-//                currentlyPlayingSong = songItem.getAttribute('data-song-number');
-//            } else if (currentlyPlayingSong === songItem.getAttribute('data-song-number')) {
-//                songItem.innerHTML = playButtonTemplate;
-//                currentlyPlayingSong = null;
-//     
-//            } else if (currentlyPlayingSong !== songItem.getAttribute('data-song-number')) {
-//                var currentlyPlayingSongElement = document.querySelector('[data-song-number="' + currentlyPlayingSong + '"]');
-//                currentlyPlayingSongElement.innerHTML = currentlyPlayingSongElement.getAttribute('data-song-number');
-//                songItem.innerHTML = pauseButtonTemplate;
-//                currentlyPlayingSong = songItem.getAttribute('data-song-number');
-//            }
-//        });
-//    }
 };

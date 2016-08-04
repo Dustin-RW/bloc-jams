@@ -46,17 +46,69 @@ var albumForeigner = {
 
 var allAlbums = [albumPicasso, albumMarconi, albumForeigner];
 
+var templates = templateGeneratorModule;
+
+//Templates
+var playButtonTemplate = templates.playButtonTemplate;
+var pauseButtonTemplate = templates.pauseButtonTemplate;
+
+// Store state of playing songs
+var currentlyPlayingSong = null;
+var clickHandler = function(event) {
+    var songItem = $(this);
+    var songNum = songItem.attr('data-song-number');
+
+
+    if (currentlyPlayingSong === null) {
+      songItem.html(pauseButtonTemplate);
+      currentlyPlayingSong = songNum;
+
+    } else if (currentlyPlayingSong === songNum) {
+      songItem.html(playButtonTemplate);
+      currentlyPlayingSong = null;
+
+    } else if (currentlyPlayingSong !== songNum) {
+      var currentlyPlayingSongElement = $('[data-song-number="' + currentlyPlayingSong + '"]');
+      currentlyPlayingSongElement.html(currentlyPlayingSongElement.attr('data-song-number'));
+      songItem.html(pauseButtonTemplate);
+      currentlyPlayingSong = songNum;
+    }
+};
+
+ var onHover = function(event) {
+    var $songNumberItem = $(this).find('td.song-item-number');
+    var $songNum = $songNumberItem.attr('data-song-number');
+
+
+    if ($songNum !== currentlyPlayingSong) {
+        $songNumberItem.html(playButtonTemplate);
+    }
+
+};
+
+var offHover = function(event) {
+    var $songNumberItem = $(this).find('td.song-item-number');
+    var $songNum = $songNumberItem.attr('data-song-number');
+
+    if ($songNum !== currentlyPlayingSong) {
+        $songNumberItem.html($songNum);
+    }
+
+};
+
 var createSongRow = function(songNumber, songName, songLength) {
-    var template = 
-        '<tr class="album-view-song-item">'
-        + ' <td class="song-item-number" id="song-item-'+songNumber+'" data-song-number="' + songNumber + '">' + songNumber + '</td>'
-        + ' <td class="song-item-title">' + songName + '</td>'
-        + ' <td class="song-item-duration">' + songLength + '</td>'
-        + '</tr>'
-    ;
     
-    return $(template);
+    //set row to the jquery template
+    var $row = $(templates.generateSongTemplate({songNumber: songNumber, songName: songName, songLength: songLength}));
     
+    //create an event click listener within every row/template, calling clickHandler on song-item0number
+    $row.find('td.song-item-number').click(clickHandler);
+    
+    //hover event listener combines mouseover and mouseleave
+    $row.hover(onHover, offHover);
+    
+    //return created row with event listeners attached
+    return $row;
 };
 
 
@@ -76,82 +128,18 @@ var setCurrentAlbum = function (album) {
     $albumSongList.empty();
     
     for (var i = 0; i < album.songs.length; i++) {
-        var $newRow = createSongRow(i + 1, album.songs[i].title, album.[i].duration);
+        var $newRow = createSongRow(i + 1, album.songs[i].title, album.songs[i].duration);
         
         $albumSongList.append($newRow);
     }
 };
 
-var findParentByClassName = function(name) {
+
+
+
+
+$(document).ready(function () {
+    setCurrentAlbum(albumPicasso);
     
-};
 
-
-//Elements with listeners
-var songListContainer = document.getElementsByClassName("album-view-song-list")[0];
-var songRows = document.getElementsByClassName('album-view-song-item');
-var playButtonTemplate = '<a class="album-song-button"><span class="ion-play"></span></a>';
-var pauseButtonTemplate = '<a class="album-song-button"><span class="ion-pause"></span></a>';
-
-// Store state of playing songs
-var currentlyPlayingSong = null;
-
-window.onload = function() {
-//    onload, sets the current album viewing album.html.  allAlbums array created globally above.
-    setCurrentAlbum(allAlbums[0]);
-    //sets a count variable to hold a position within event Handler below
-    count = 1;
-    //albumImage, selected from document.getElementsByCLassName above, adds an event to listen for upon a click
-    albumImage.addEventListener("click", function(event) {
-        //onclick, setCurrentAlbum becomes the second album within array
-        setCurrentAlbum(allAlbums[count]);
-        //after click, count increase by 1
-        count++;
-        //then if count is the same as the array length, resets count back to 0
-        if (count == allAlbums.length) {
-            count = 0;
-        }
-    });
-    
-    
-    
-   clickHandler = function(event) {
-    var songItem = this.querySelector('td.song-item-number');
-    var songNum = songItem.getAttribute('data-song-number');
-
-    if (currentlyPlayingSong === null) {
-      songItem.innerHTML = pauseButtonTemplate;
-      currentlyPlayingSong = songNum;
-    } else if (currentlyPlayingSong === songNum) {
-      songItem.innerHTML = playButtonTemplate;
-      currentlyPlayingSong = null;
-
-    } else if (currentlyPlayingSong !== songNum) {
-      var currentlyPlayingSongElement = document.querySelector('[data-song-number="' + currentlyPlayingSong + '"]');
-      currentlyPlayingSongElement.innerHTML = currentlyPlayingSongElement.getAttribute('data-song-number');
-      songItem.innerHTML = pauseButtonTemplate;
-      currentlyPlayingSong = songNum;
-    }
-  };
-    
-    
-    for (i = 0; i < songRows.length; i++) {
-        songRows[i].addEventListener('mouseover', function(event) {
-            var songItem = this.querySelector('td.song-item-number');
-            var songNum = songItem.getAttribute('data-song-number');
-
-            if (songNum !== currentlyPlayingSong) {
-                songItem.innerHTML = playButtonTemplate;
-            }
-        });
-        songRows[i].addEventListener('mouseleave', function(event) {
-          var songItem = this.querySelector('.song-item-number');
-          var songItemNumber = songItem.getAttribute('data-song-number');
-
-            if (songItemNumber !== currentlyPlayingSong) {
-                songItem.innerHTML = songItemNumber;
-            }
-        });
-        songRows[i].addEventListener('click', clickHandler);
-    }
-};
+});

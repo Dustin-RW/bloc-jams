@@ -1,49 +1,3 @@
-var albumPicasso = {
-    title: 'The Colors',
-    artist: 'Pablo Picasso',
-    label: 'Cubism',
-    year: '1881',
-    albumArtUrl: 'assets/images/album_covers/01.png',
-    songs: [
-        { title: 'Blue', duration: '4:26' },
-        { title: 'Green', duration: '3:14' },
-        { title: 'Red', duration: '5:01' },
-        { title: 'Pink', duration: '3:21' },
-        { title: 'Magenta', duration: '2:15' }
-    ]
-};
-
-var albumMarconi = {
-    title: 'The Telephone',
-    artist: 'Guglielmo Marconi',
-    label: 'EM',
-    year: '1909',
-    albumArtUrl: 'assets/images/album_covers/20.png',
-    songs: [
-        { title: 'Hello, Operator', duration: '1:01' },
-        { title: 'Ring, ring, ring', duration: '5:01' },
-        { title: 'Fits in your pocket', duration: '3:21' },
-        { title: 'Can you hear me now?', duration: '3:14' },
-        { title: 'Wrong phone number', duration: '2:15' }
-    ] 
-};
-
-var albumForeigner = {
-    title: 'Agent Provocateur',
-    artist: 'Foreigner',
-    label: 'Studio',
-    year: '1984',
-    albumArtUrl: 'assets/images/album_covers/18.png',
-    songs: [
-        { title: 'Tooth and Nail', duration: '3:54' },
-        { title: 'That was Yesterday', duration: '3:50' },
-        { title: 'I Want To Know What Love Is', duration: '3:21' },
-        { title: 'Growing Up the Hard Way', duration: '3:14' },
-        { title: 'Reaction to Action', duration: '2:15' },
-        { title: 'Reaction to Action', duration: '2:15' }
-    ] 
-};
-
 var allAlbums = [albumPicasso, albumMarconi, albumForeigner];
 
 var templates = templateGeneratorModule;
@@ -51,27 +5,27 @@ var templates = templateGeneratorModule;
 //Templates
 var playButtonTemplate = templates.playButtonTemplate;
 var pauseButtonTemplate = templates.pauseButtonTemplate;
+var playerBarPlayButton = templates.playerBarPlayButton;
+var playerBarPauseButton = templates.playerBarPauseButton;
 
-// Store state of playing songs
-var currentlyPlayingSong = null;
 var clickHandler = function(event) {
     var songItem = $(this);
     var songNum = songItem.attr('data-song-number');
 
 
-    if (currentlyPlayingSong === null) {
+    if (currentlyPlayingSongNumber === null) {
       songItem.html(pauseButtonTemplate);
-      currentlyPlayingSong = songNum;
+      currentlyPlayingSongNumber = songNum;
 
-    } else if (currentlyPlayingSong === songNum) {
+    } else if (currentlyPlayingSongNumber === songNum) {
       songItem.html(playButtonTemplate);
-      currentlyPlayingSong = null;
+      currentlyPlayingSongNumber = null;
 
-    } else if (currentlyPlayingSong !== songNum) {
-      var currentlyPlayingSongElement = $('[data-song-number="' + currentlyPlayingSong + '"]');
+    } else if (currentlyPlayingSongNumber!== songNum) {
+      var currentlyPlayingSongElement = $('[data-song-number="' + currentlyPlayingSongNumber + '"]');
       currentlyPlayingSongElement.html(currentlyPlayingSongElement.attr('data-song-number'));
       songItem.html(pauseButtonTemplate);
-      currentlyPlayingSong = songNum;
+      currentlyPlayingSongNumber = songNum;
     }
 };
 
@@ -80,7 +34,7 @@ var clickHandler = function(event) {
     var $songNum = $songNumberItem.attr('data-song-number');
 
 
-    if ($songNum !== currentlyPlayingSong) {
+    if ($songNum !== currentlyPlayingSongNumber) {
         $songNumberItem.html(playButtonTemplate);
     }
 
@@ -90,7 +44,7 @@ var offHover = function(event) {
     var $songNumberItem = $(this).find('td.song-item-number');
     var $songNum = $songNumberItem.attr('data-song-number');
 
-    if ($songNum !== currentlyPlayingSong) {
+    if ($songNum !== currentlyPlayingSongNumber) {
         $songNumberItem.html($songNum);
     }
 
@@ -111,6 +65,16 @@ var createSongRow = function(songNumber, songName, songLength) {
     return $row;
 };
 
+//var setPlayerInfo = function(album) {
+//    
+//    var $whosPlayingNow = $(templates.generatePlayerBarSong({album.artist, album.songs})); 
+//    
+//    console.log($whosPlayingNow);
+//    
+//    return $whosPlayingNow;
+//};
+
+
 
 var $albumTitle = $('.album-view-title');
 var $albumArtist = $('.album-view-artist');
@@ -119,6 +83,8 @@ var $albumImage = $('.album-cover-art');
 var $albumSongList = $('.album-view-song-list');
 
 var setCurrentAlbum = function (album) {
+    
+    currentAlbum = album;
     
     $albumTitle.text(album.title);
     $albumArtist.text(album.artist);
@@ -135,11 +101,12 @@ var setCurrentAlbum = function (album) {
 };
 
 
-
-
+// Store state of playing songs
+var currentAlbum = null;
+var currentlyPlayingSongNumber = null;
+var currentSongFromAlbum = null;
 
 $(document).ready(function () {
     setCurrentAlbum(albumPicasso);
-    
-
+//    setPlayerInfo(albumPicasso);
 });

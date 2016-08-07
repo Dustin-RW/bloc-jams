@@ -6,7 +6,7 @@ var templateGeneratorModule = (function () {
         
         playerBarPlayButton: '<span class="ion-play"></span>',
         
-        playerBarPauseButton: '<span class="ion-pause></span>',
+        playerBarPauseButton: '<span class="ion-pause"></span>',
         
         generateSongTemplate: function(song) {
             return '<tr class="album-view-song-item">'

@@ -8,24 +8,24 @@ var pauseButtonTemplate = templates.pauseButtonTemplate;
 var playerBarPlayButton = templates.playerBarPlayButton;
 var playerBarPauseButton = templates.playerBarPauseButton;
 
-var clickHandler = function(event) {
+var clickHandler = function() {
     var songItem = $(this);
-    var songNum = songItem.attr('data-song-number');
-
-
-    if (currentlyPlayingSongNumber === null) {
-      songItem.html(pauseButtonTemplate);
-      currentlyPlayingSongNumber = songNum;
-
-    } else if (currentlyPlayingSongNumber === songNum) {
-      songItem.html(playButtonTemplate);
-      currentlyPlayingSongNumber = null;
-
-    } else if (currentlyPlayingSongNumber!== songNum) {
-      var currentlyPlayingSongElement = $('[data-song-number="' + currentlyPlayingSongNumber + '"]');
-      currentlyPlayingSongElement.html(currentlyPlayingSongElement.attr('data-song-number'));
-      songItem.html(pauseButtonTemplate);
-      currentlyPlayingSongNumber = songNum;
+    var songNumber = songItem.attr('data-song-number');
+    
+    if (currentlyPlayingSongNumber !== null) {
+        var currentlyPlayingCell = $('.song-item-number[data-song-number="' + currentlyPlayingSongNumber + '"]');
+        
+        currentlyPlayingCell.html(currentlyPlayingSongNumber);
+    }
+    
+    if (currentlyPlayingSongNumber !== songNumber) {
+        $(this).html(pauseButtonTemplate);
+        currentlyPlayingSongNumber = songNumber;
+        currentSongFromAlbum = currentAlbum.songs[songNumber - 1];
+    } else if (currentlyPlayingSongNumber === songNumber) {
+        $(this).html(playButtonTemplate)
+        currentlyPlayingSongNumber = null;
+        currentSongFromAlbum = null;
     }
 };
 
@@ -65,16 +65,6 @@ var createSongRow = function(songNumber, songName, songLength) {
     return $row;
 };
 
-//var setPlayerInfo = function(album) {
-//    
-//    var $whosPlayingNow = $(templates.generatePlayerBarSong({album.artist, album.songs})); 
-//    
-//    console.log($whosPlayingNow);
-//    
-//    return $whosPlayingNow;
-//};
-
-
 
 var $albumTitle = $('.album-view-title');
 var $albumArtist = $('.album-view-artist');
@@ -108,5 +98,5 @@ var currentSongFromAlbum = null;
 
 $(document).ready(function () {
     setCurrentAlbum(albumPicasso);
-//    setPlayerInfo(albumPicasso);
+    
 });

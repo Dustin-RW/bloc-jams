@@ -15,21 +15,6 @@ var templateGeneratorModule = (function () {
                 + ' <td class="song-item-duration">' + song.songLength + '</td>'
                 + '</tr>'
             ;
-        },
-        
-        // album.html <div class="control-group currently-playing">
-        generatePlayerBarSong: function(artist, song) {
-            return '<h2 class="song-name">' + song.name + '</h2>'
-                + '<div class="seek-control">'
-                +       '<div class="seek-bar">'
-                +           '<div class="fill"></div>'
-                +           '<div class="thumb"></div>'
-                +       '</div>'
-                +       '<div class="current-time">2:30</div>'
-                +       '<div class="total-time">4:45</div>'
-                +       '</div>'
-                +   '<h2 class="artist-song-mobile">' + song.name + '' + artist + '</h2>'
-                +   '<h3 class="artist-name">' + artist + '</h3>'
         }
     }
 }());

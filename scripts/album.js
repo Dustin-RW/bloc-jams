@@ -10,7 +10,7 @@ var playerBarPauseButton = templates.playerBarPauseButton;
 
 var clickHandler = function() {
     var songItem = $(this);
-    var songNumber = parseInt(songItem.attr('data-song-number'));
+    var songNumber = songItem.attr('data-song-number');
     
     if (currentlyPlayingSongNumber !== null) {
         var currentlyPlayingCell = $('.song-item-number[data-song-number="' + currentlyPlayingSongNumber + '"]');

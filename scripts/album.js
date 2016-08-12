@@ -33,6 +33,7 @@ var clickHandler = function() {
         
         updatePlayerBarSong();
     } else if (currentlyPlayingSongNumber === songNumber) {
+        
         if (currentSoundFile.isPaused()) {
             $(this).html(pauseButtonTemplate);
             $('.main-controls .play-pause').html(playerBarPlayButton);
@@ -44,8 +45,8 @@ var clickHandler = function() {
             currentSoundFile.pause();
         }
     }
-    
-        setTotalTimeInPlayerBar(buzz.toTimer($(this).parent().find('.song-item-duration').html()));
+        
+        setTotalTimeInPlayerBar(songItem.parent().find('.song-item-duration').html());
     
 };
 
@@ -103,10 +104,16 @@ var getSongNumberCell = function(number) {
     return $('.song-item-number[data-song-number="' + number + '"]')
 };
 
+
+
 var createSongRow = function(songNumber, songName, songLength) {
+
+    
     
     //set row to the jquery template
     var $row = $(templates.generateSongTemplate({songNumber: songNumber, songName: songName, songLength: songLength}));
+    
+    
     
     //create an event click listener within every row/template, calling clickHandler on song-item0number
     $row.find('td.song-item-number').click(clickHandler);
@@ -137,7 +144,7 @@ var setCurrentAlbum = function (album) {
     $albumSongList.empty();
     
     for (var i = 0; i < album.songs.length; i++) {
-        var $newRow = createSongRow(i + 1, album.songs[i].title, album.songs[i].duration);
+        var $newRow = createSongRow(i + 1, album.songs[i].title, buzz.toTimer(album.songs[i].duration));
         
         $albumSongList.append($newRow);
     }
@@ -225,6 +232,7 @@ var updatePlayerBarSong = function() {
 var setCurrentTimeInPlayerBar = function(currentTime) {
     $('.current-time').html(currentTime);
 };
+
 
 var setTotalTimeInPlayerBar = function(totalTime) {
     $('.total-time').html(totalTime);

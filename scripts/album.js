@@ -44,6 +44,9 @@ var clickHandler = function() {
             currentSoundFile.pause();
         }
     }
+    
+        setTotalTimeInPlayerBar(buzz.toTimer($(this).parent().find('.song-item-duration').html()));
+    
 };
 
  var onHover = function(event) {
@@ -158,6 +161,7 @@ var updateSeekBarWhileSongPlays = function() {
           var $seekBar = $('.seek-control .seek-bar');
           
           updateSeekPercentage($seekBar, seekBarFillRatio);
+          setCurrentTimeInPlayerBar(buzz.toTimer(this.getTime()));
       });
   }  
 };
@@ -215,7 +219,16 @@ var updatePlayerBarSong = function() {
     $('.currently-playing .artist-song-mobile').text(currentSongFromAlbum.title + " - " + currentAlbum.artist);
     
     $('.main-controls .play-pause').html(playerBarPauseButton);
+    
 };
+
+var setCurrentTimeInPlayerBar = function(currentTime) {
+    $('.current-time').html(currentTime);
+};
+
+var setTotalTimeInPlayerBar = function(totalTime) {
+    $('.total-time').html(totalTime);
+}
 
 var nextSong = function() {
     
